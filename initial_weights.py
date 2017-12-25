@@ -53,7 +53,7 @@ epochs = 50
 batch_size = 16
 
 
-def save_bottlebeck_features():
+def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
@@ -107,5 +107,5 @@ def train_top_model():
     model.save_weights(top_model_weights_path)
 
 
-save_bottlebeck_features()
+save_bottleneck_features()
 train_top_model()
