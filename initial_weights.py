@@ -41,6 +41,8 @@ from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 
+import time
+
 # dimensions of our images.
 img_width, img_height = 150, 150
 
@@ -53,7 +55,7 @@ epochs = 50
 batch_size = 16
 
 
-def save_bottleneck_features():
+def train_top_model():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
@@ -65,10 +67,8 @@ def save_bottleneck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
-    bottleneck_features_train = model.predict_generator(
+    features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
-    np.save(open('bottleneck_features_train.npy', 'w'),
-            bottleneck_features_train)
 
     generator = datagen.flow_from_directory(
         validation_data_dir,
@@ -76,20 +76,16 @@ def save_bottleneck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
-    bottleneck_features_validation = model.predict_generator(
+    features_validation = model.predict_generator(
         generator, nb_validation_samples // batch_size)
-    np.save(open('bottleneck_features_validation.npy', 'w'),
-            bottleneck_features_validation)
 
-
-def train_top_model():
-    train_data = np.load(open('bottleneck_features_train.npy'))
+    train_data = features_train
     train_labels = np.array(
-        [0] * (nb_train_samples / 2) + [1] * (nb_train_samples / 2))
+        [0] * (nb_train_samples // 2) + [1] * (nb_train_samples // 2))
 
-    validation_data = np.load(open('bottleneck_features_validation.npy'))
+    validation_data = features_validation
     validation_labels = np.array(
-        [0] * (nb_validation_samples / 2) + [1] * (nb_validation_samples / 2))
+        [0] * (nb_validation_samples // 2) + [1] * (nb_validation_samples // 2))
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
@@ -107,5 +103,10 @@ def train_top_model():
     model.save_weights(top_model_weights_path)
 
 
-save_bottleneck_features()
+print("Started program.")
+curr = time.time()
+# save_features()
+# print("Saved features in " + str(time.time() - curr) + " seconds.")
+# curr = time.time()
 train_top_model()
+print("Trained top model in " + str(time.time() - curr) + " seconds.")
