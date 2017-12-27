@@ -40,7 +40,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
-
 import time
 
 # dimensions of our images.
@@ -49,13 +48,13 @@ img_width, img_height = 150, 150
 top_model_weights_path = 'fc_model.h5'
 train_data_dir = 'data/train'
 validation_data_dir = 'data/validation'
-nb_train_samples = 2000
-nb_validation_samples = 800
+nb_train_samples = 200
+nb_validation_samples = 80
 epochs = 50
-batch_size = 16
+batch_size = 8
 
 
-def train_top_model():
+def save_features():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
@@ -69,6 +68,8 @@ def train_top_model():
         shuffle=False)
     features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
+    np.save(open('features_train.npy', 'wb'),
+            features_train)
 
     generator = datagen.flow_from_directory(
         validation_data_dir,
@@ -78,12 +79,16 @@ def train_top_model():
         shuffle=False)
     features_validation = model.predict_generator(
         generator, nb_validation_samples // batch_size)
+    np.save(open('features_validation.npy', 'wb'),
+            features_validation)
 
-    train_data = features_train
+
+def train_top_model():
+    train_data = np.load(open('features_train.npy', 'rb'))
     train_labels = np.array(
         [0] * (nb_train_samples // 2) + [1] * (nb_train_samples // 2))
 
-    validation_data = features_validation
+    validation_data = np.load(open('features_validation.npy', 'rb'))
     validation_labels = np.array(
         [0] * (nb_validation_samples // 2) + [1] * (nb_validation_samples // 2))
 
@@ -105,8 +110,8 @@ def train_top_model():
 
 print("Started program.")
 curr = time.time()
-# save_features()
-# print("Saved features in " + str(time.time() - curr) + " seconds.")
-# curr = time.time()
+save_features()
+print("Saved features in " + str(time.time() - curr) + " seconds.")
+curr = time.time()
 train_top_model()
 print("Trained top model in " + str(time.time() - curr) + " seconds.")
