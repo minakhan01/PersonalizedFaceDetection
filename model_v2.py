@@ -52,7 +52,8 @@ train_data_dir = 'data/train'
 validation_data_dir = 'data/validation'
 nb_train_samples = 200
 nb_validation_samples = 80
-epochs = 50
+top_model_epochs = 50
+fine_tune_epochs = 50
 batch_size = 8
 
 
@@ -104,7 +105,7 @@ def train_top_model():
                   loss='binary_crossentropy', metrics=['accuracy'])
 
     model.fit(train_data, train_labels,
-              epochs=epochs,
+              epochs=top_model_epochs,
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
@@ -165,7 +166,7 @@ def fine_tune_model():
     model.fit_generator(
         train_generator,
         steps_per_epoch=nb_train_samples / batch_size,
-        epochs=epochs,
+        epochs=fine_tune_epochs,
         validation_data=validation_generator,
         nb_val_samples=nb_validation_samples)
 
