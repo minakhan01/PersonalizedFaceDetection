@@ -1,18 +1,9 @@
 '''This script goes along the blog post
 "Building powerful image classification models using very little data"
 from blog.keras.io.
-It uses data that can be downloaded at:
-https://www.kaggle.com/c/dogs-vs-cats/data
-In our setup, we:
-- created a data/ folder
-- created train/ and validation/ subfolders inside data/
-- created cats/ and dogs/ subfolders inside train/ and validation/
-- put the cat pictures index 0-999 in data/train/cats
-- put the cat pictures index 1000-1400 in data/validation/cats
-- put the dogs pictures index 12500-13499 in data/train/dogs
-- put the dog pictures index 13500-13900 in data/validation/dogs
-So that we have 1000 training examples for each class, and 400 validation examples for each class.
-In summary, this is our directory structure:
+(https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html)
+
+Data directory structure:
 ```
 data/
     train/
@@ -48,13 +39,13 @@ from keras.models import Model
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'fc_model.h5'
-train_data_dir = 'data/train'
-validation_data_dir = 'data/validation'
+train_data_dir = 'face_data/train'
+validation_data_dir = 'face_data/validation'
 nb_train_samples = 200
-nb_validation_samples = 80
-top_model_epochs = 50
-fine_tune_epochs = 50
-batch_size = 8
+nb_validation_samples = 100
+top_model_epochs = 100
+fine_tune_epochs = 100
+batch_size = 10
 
 
 def save_features():
