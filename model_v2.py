@@ -32,8 +32,8 @@ from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
-import time
 from keras.models import Model
+import time
 
 # dimensions of our images.
 img_width, img_height = 150, 150
@@ -103,7 +103,7 @@ def train_top_model():
 
 def fine_tune_model():
     # build the VGG16 network
-    base_model = applications.VGG16(weights='imagenet',include_top=False,input_shape=(img_width,img_height,3))
+    base_model = applications.VGG16(weights='imagenet', include_top=False, input_shape=(img_width,img_height,3))
     print('Model loaded.')
 
     # build a classifier model to put on top of the convolutional model
