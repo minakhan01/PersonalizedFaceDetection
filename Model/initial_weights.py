@@ -46,8 +46,8 @@ import time
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'fc_model.h5'
-train_data_dir = 'data/train'
-validation_data_dir = 'data/validation'
+train_data_dir = 'dog_cat_data/train'
+validation_data_dir = 'dog_cat_data/validation'
 nb_train_samples = 200
 nb_validation_samples = 80
 epochs = 50
