@@ -41,8 +41,8 @@ img_width, img_height = 150, 150
 top_model_weights_path = 'fc_model.h5'
 train_data_dir = 'face_data/train'
 validation_data_dir = 'face_data/validation'
-nb_train_samples = 200
-nb_validation_samples = 100
+nb_train_samples = 400
+nb_validation_samples = 200
 top_model_epochs = 100
 fine_tune_epochs = 100
 batch_size = 10
@@ -129,7 +129,7 @@ def fine_tune_model():
     # compile the model with a SGD/momentum optimizer
     # and a very slow learning rate.
     model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.SGD(lr=1e-6, momentum=0.8),
+                  optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
                   metrics=['accuracy'])
 
     # prepare data augmentation configuration
