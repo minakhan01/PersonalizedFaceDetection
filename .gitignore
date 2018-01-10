@@ -103,3 +103,7 @@ ENV/
 # executable files
 .exe
 *.exe
+
+# Keras files
+*/*.h5
+*/*.npy
