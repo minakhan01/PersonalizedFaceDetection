@@ -1,0 +1,10 @@
+<form action="/predict" method="POST" enctype=multipart/form-data onsubmit="disableButton()">
+    <input type="file" name="image" id="image">
+    <button type="submit" class="btn btn-fp" name="Predict" id="Predict">Predict</button>
+</form>
+
+<script type="text/javascript">
+    function disableButton() {
+        document.getElementsByName('Predict')[2].disabled = true;
+    }
+</script>

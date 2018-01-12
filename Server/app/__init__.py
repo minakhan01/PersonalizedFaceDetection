@@ -2,9 +2,12 @@
 # Imports #
 ###########
 
-from flask import Flask, render_template, jsonify, redirect
+from flask import Flask, render_template, jsonify, redirect, request
 from flask.ext.mysql import MySQL
 import os
+import numpy as np
+from keras.models import load_model
+import cv2
 
 
 #########
@@ -21,6 +24,12 @@ else:
 mysql = MySQL()
 mysql.init_app(app)
 
+# dimensions of images
+img_width, img_height = 150, 150
+
+model_path = 'model.h5'
+model = load_model(model_path)
+
 #############
 # Endpoints #
 #############
@@ -33,3 +42,18 @@ def home():
         return "prod"
     else:
         return "unknown"
+
+@app.route("/predict", methods=['GET', 'POST'])
+def predict():
+    # POST request
+    if request.form:
+
+        img = cv2.imdecode(np.fromstring(request.files['image'].read(), np.uint8), cv2.IMREAD_COLOR)
+        img = cv2.resize(img, (img_width, img_height))
+        img = np.reshape(img, [1, img_width, img_height, 3])
+
+        prediction = model.predict(img)
+
+        return "Prediction: " + str(int(prediction[0][0])) + "; 0 = Hillary, 1 = Obama"
+    else:
+        return render_template("predict.html")

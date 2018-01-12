@@ -105,5 +105,5 @@ ENV/
 *.exe
 
 # Keras files
-*/*.h5
-*/*.npy
+Model/*.h5
+Model/*.npy
