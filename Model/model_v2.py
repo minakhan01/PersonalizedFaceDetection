@@ -39,6 +39,7 @@ import time
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'fc_model.h5'
+model_path = 'model.h5'
 train_data_dir = 'face_data/train'
 validation_data_dir = 'face_data/validation'
 nb_train_samples = 400
@@ -103,7 +104,7 @@ def train_top_model():
 
 def fine_tune_model():
     # build the VGG16 network
-    base_model = applications.VGG16(weights='imagenet', include_top=False, input_shape=(img_width,img_height,3))
+    base_model = applications.VGG16(weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
     print('Model loaded.')
 
     # build a classifier model to put on top of the convolutional model
@@ -160,6 +161,7 @@ def fine_tune_model():
         epochs=fine_tune_epochs,
         validation_data=validation_generator,
         nb_val_samples=nb_validation_samples)
+    model.save(model_path)
 
 
 print("Started program.")
