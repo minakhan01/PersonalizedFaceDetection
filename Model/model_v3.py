@@ -38,7 +38,8 @@ import time, os, sys
 # dimensions of our images.
 img_width, img_height = 150, 150
 
-top_model_weights_path = 'fc_model.h5'
+top_model_weights_path = 'fc_model_weights.h5'
+model_path = 'model.h5'
 train_data_dir = 'face_data/train'
 validation_data_dir = 'face_data/validation'
 num_classes = sum(1 for i in os.listdir(train_data_dir))
@@ -162,6 +163,7 @@ def fine_tune_model():
         epochs=fine_tune_epochs,
         validation_data=validation_generator,
         nb_val_samples=nb_validation_samples)
+    model.save(model_path)
 
 
 print("Started program.")

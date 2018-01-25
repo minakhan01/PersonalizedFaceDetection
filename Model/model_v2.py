@@ -38,7 +38,7 @@ import time
 # dimensions of our images.
 img_width, img_height = 150, 150
 
-top_model_weights_path = 'fc_model.h5'
+top_model_weights_path = 'fc_model_weights.h5'
 model_path = 'model.h5'
 train_data_dir = 'face_data/train'
 validation_data_dir = 'face_data/validation'
