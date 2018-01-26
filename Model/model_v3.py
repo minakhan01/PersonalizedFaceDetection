@@ -96,7 +96,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(3, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
 
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy',
@@ -118,7 +118,7 @@ def fine_tune_model():
     top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
     top_model.add(Dense(256, activation='relu'))
     top_model.add(Dropout(0.5))
-    top_model.add(Dense(3, activation='softmax'))
+    top_model.add(Dense(num_classes, activation='softmax'))
 
     # note that it is necessary to start with a fully-trained
     # classifier, including the top classifier,
@@ -172,9 +172,9 @@ def fine_tune_model():
 
 
 print("Started program.")
-curr = time.time()
-save_features()
-print("Saved features in " + str(time.time() - curr) + " seconds.")
+# curr = time.time()
+# save_features()
+# print("Saved features in " + str(time.time() - curr) + " seconds.")
 curr = time.time()
 train_top_model()
 print("Trained top model in " + str(time.time() - curr) + " seconds.")
