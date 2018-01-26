@@ -33,6 +33,7 @@ from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 from keras.models import Model
+from keras.utils import np_utils
 import time, os, sys
 
 # dimensions of our images.
@@ -81,22 +82,25 @@ def save_features():
 
 def train_top_model():
     train_data = np.load(open('features_train.npy', 'rb'))
-    train_labels = np.array(
-        [i for i in range(num_classes) for j in range(nb_train_samples // num_classes)])
+    train_labels = np_utils.to_categorical(np.array(
+        [i for i in range(num_classes) for j in range(nb_train_samples // num_classes)]))
+    # print(train_labels)
 
 
     validation_data = np.load(open('features_validation.npy', 'rb'))
-    validation_labels = np.array(
-        [i for i in range(num_classes) for j in range(nb_validation_samples // num_classes)])
+    validation_labels = np_utils.to_categorical(np.array(
+        [i for i in range(num_classes) for j in range(nb_validation_samples // num_classes)]))
+    # print(validation_labels)
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(3, activation='softmax'))
 
     model.compile(optimizer='rmsprop',
-                  loss='binary_crossentropy', metrics=['accuracy'])
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
     model.fit(train_data, train_labels,
               epochs=top_model_epochs,
@@ -114,7 +118,7 @@ def fine_tune_model():
     top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
     top_model.add(Dense(256, activation='relu'))
     top_model.add(Dropout(0.5))
-    top_model.add(Dense(1, activation='sigmoid'))
+    top_model.add(Dense(3, activation='softmax'))
 
     # note that it is necessary to start with a fully-trained
     # classifier, including the top classifier,
@@ -131,8 +135,8 @@ def fine_tune_model():
 
     # compile the model with a SGD/momentum optimizer
     # and a very slow learning rate.
-    model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
+    model.compile(optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
+                  loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
     # prepare data augmentation configuration
@@ -163,6 +167,7 @@ def fine_tune_model():
         epochs=fine_tune_epochs,
         validation_data=validation_generator,
         nb_val_samples=nb_validation_samples)
+
     model.save(model_path)
 
 
