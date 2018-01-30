@@ -27,8 +27,18 @@ mysql.init_app(app)
 # dimensions of images
 img_width, img_height = 150, 150
 
-model_path = 'model.h5'
-model = load_model(model_path)
+try:
+    model_path = os.getcwd() + '\model.h5'
+    model = load_model(model_path)
+
+    classes_path = os.getcwd() + '\classes.txt'
+    classes = open(classes_path).read().splitlines()
+except:
+    model_path = os.getcwd() + '\Server\model.h5'
+    model = load_model(model_path)
+
+    classes_path = os.getcwd() + '\Server\classes.txt'
+    classes = open(classes_path).read().splitlines()
 
 #############
 # Endpoints #
@@ -54,6 +64,6 @@ def predict():
 
         prediction = model.predict(img)
 
-        return "Prediction: " + str(int(prediction[0][0])) + "; 0 = Hillary, 1 = Obama"
+        return classes[int(prediction[0][0])]
     else:
         return render_template("predict.html")
