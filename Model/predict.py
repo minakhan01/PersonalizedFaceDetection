@@ -13,6 +13,10 @@ input_path1 = 'face_data/train/Barrack Obama/0.jpg'          # Should output 1
 input_path2 = 'face_data/train/Aishwarya Rai/5.jpg'          # Should output 1
 input_path3 = 'face_data/train/Hillary Clinton/0.jpg'          # Should output 1
 input_path4 = 'face_data/train/Michael Jackson/3.jpg'          # Should output 1
+input_path5 = 'face_data/train/Barrack Obama/1.jpg'          # Should output 1
+input_path6 = 'face_data/train/Aishwarya Rai/21.jpg'          # Should output 1
+input_path7 = 'face_data/train/Hillary Clinton/1.jpg'          # Should output 1
+input_path8 = 'face_data/train/Michael Jackson/12.jpg'          # Should output 1
 
 def predict(input_path):
     model = load_model(model_path)
@@ -31,4 +35,8 @@ predict(input_path1)
 predict(input_path2)
 predict(input_path3)
 predict(input_path4)
+predict(input_path5)
+predict(input_path6)
+predict(input_path7)
+predict(input_path8)
 print("Predicted in " + str(time.time() - curr) + " seconds.")
