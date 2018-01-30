@@ -28,10 +28,10 @@ mysql.init_app(app)
 img_width, img_height = 150, 150
 
 try:
-    model_path = os.getcwd() + '\model.h5'
+    model_path = os.getcwd() + '/model.h5'
     model = load_model(model_path)
 
-    classes_path = os.getcwd() + '\classes.txt'
+    classes_path = os.getcwd() + '/classes.txt'
     classes = open(classes_path).read().splitlines()
 except:
     model_path = os.getcwd() + '\Server\model.h5'
