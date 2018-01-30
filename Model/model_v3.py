@@ -152,13 +152,13 @@ def fine_tune_model():
         train_data_dir,
         target_size=(img_height, img_width),
         batch_size=batch_size,
-        class_mode=None)
+        class_mode="categorical")
 
     validation_generator = test_datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_height, img_width),
         batch_size=batch_size,
-        class_mode=None)
+        class_mode="categorical")
 
     # fine-tune the model
     model.fit_generator(
@@ -166,7 +166,7 @@ def fine_tune_model():
         steps_per_epoch=nb_train_samples / batch_size,
         epochs=fine_tune_epochs,
         validation_data=validation_generator,
-        nb_val_samples=nb_validation_samples)
+        validation_steps=nb_validation_samples/batch_size)
 
     model.save(model_path)
 
