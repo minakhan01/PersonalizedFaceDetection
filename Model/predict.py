@@ -64,7 +64,7 @@ def predict(input_path):
 
     prediction = model.predict(img)
 
-    print(prediction)
+    print(list(prediction[0]).index(1))
 
 print("Started program.")
 curr = time.time()

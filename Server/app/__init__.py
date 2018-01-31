@@ -64,6 +64,6 @@ def predict():
 
         prediction = model.predict(img)
 
-        return classes[int(prediction[0][0])]
+        return classes[list(prediction[0]).index(1)]
     else:
         return render_template("predict.html")
