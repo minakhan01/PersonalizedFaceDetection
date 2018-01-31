@@ -34,13 +34,14 @@ from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 from keras.models import Model
 from keras.utils import np_utils
-import time, os, sys
+import time, os, sys, operator
 
 # dimensions of our images.
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'fc_model_weights.h5'
 model_path = 'model.h5'
+classes_path = 'classes.txt'
 train_data_dir = 'face_data/train'
 validation_data_dir = 'face_data/validation'
 num_classes = sum(1 for i in os.listdir(train_data_dir))
@@ -170,6 +171,10 @@ def fine_tune_model():
 
     model.save(model_path)
 
+    with open(classes_path, 'w') as file:
+        for key, value in sorted(train_generator.class_indices.items(), key=operator.itemgetter(1)):
+            file.write(key + "\n")
+
 
 print("Started program.")
 # curr = time.time()
@@ -178,5 +183,6 @@ print("Started program.")
 curr = time.time()
 train_top_model()
 print("Trained top model in " + str(time.time() - curr) + " seconds.")
+curr = time.time()
 fine_tune_model()
 print("Fine tuned model in " + str(time.time() - curr) + " seconds.")
