@@ -48,7 +48,7 @@ num_classes = sum(1 for i in os.listdir(train_data_dir))
 nb_train_samples = 200 * num_classes
 nb_validation_samples = 100 * num_classes
 top_model_epochs = 100
-fine_tune_epochs = 100
+fine_tune_epochs = 0
 batch_size = 10
 
 
