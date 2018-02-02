@@ -53,17 +53,19 @@ def home():
     else:
         return "unknown"
 
-@app.route("/predict", methods=['GET', 'POST'])
+# @Mina: If it still doesn't work, try changing the value of methods in the line
+# below from ['POST'] to ['GET', 'POST']
+@app.route("/predict", methods=['POST'])
 def predict():
-    # POST request
-    if request.form:
+    img = cv2.imdecode(np.fromstring(request.files['image'].read(),
+        np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.resize(img, (img_width, img_height))
+    img = np.reshape(img, [1, img_width, img_height, 3])
 
-        img = cv2.imdecode(np.fromstring(request.files['image'].read(), np.uint8), cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (img_width, img_height))
-        img = np.reshape(img, [1, img_width, img_height, 3])
+    prediction = model.predict(img)
 
-        prediction = model.predict(img)
+    return classes[list(prediction[0]).index(1)]
 
-        return classes[list(prediction[0]).index(1)]
-    else:
-        return render_template("predict.html")
+@app.route("/upload", methods=['GET'])
+def upload():
+    return render_template("upload.html")
