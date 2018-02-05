@@ -53,10 +53,8 @@ def home():
     else:
         return "unknown"
 
-# @Mina: If it still doesn't work, try changing the value of methods in the line
-# below from ['POST'] to ['GET', 'POST']
-@app.route("/predict", methods=['POST'])
-def predict():
+@app.route("/only_predict", methods=['POST'])
+def only_predict():
     img = cv2.imdecode(np.fromstring(request.files['image'].read(),
         np.uint8), cv2.IMREAD_COLOR)
     img = cv2.resize(img, (img_width, img_height))
@@ -65,6 +63,31 @@ def predict():
     prediction = model.predict(img)
 
     return classes[list(prediction[0]).index(1)]
+
+@app.route("/predict", methods=['POST'])
+def predict(filename):
+    image = face_recognition.load_image_file(request.files['image'])
+
+    face_locations = face_recognition.face_locations(image, model="cnn")
+
+    # Crop image to just the face if a face is detected
+    if face_locations:
+        face_location = list(face_locations[0])
+
+        top, right, bottom, left = face_location
+
+        face_image = image[top:bottom, left:right]
+        image = Image.fromarray(face_image)
+
+    img = cv2.imdecode(np.fromstring(image.read(),
+        np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.resize(img, (img_width, img_height))
+    img = np.reshape(img, [1, img_width, img_height, 3])
+
+    prediction = model.predict(img)
+
+    return classes[list(prediction[0]).index(1)]
+
 
 @app.route("/upload", methods=['GET'])
 def upload():
