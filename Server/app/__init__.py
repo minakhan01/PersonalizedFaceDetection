@@ -9,7 +9,9 @@ import os
 import numpy as np
 from keras.models import load_model
 import cv2
-
+import face_recognition
+from PIL import Image
+import time
 
 #########
 # Setup #
@@ -71,29 +73,40 @@ def only_predict():
     return classes[list(prediction[0]).index(1)]
 
 @app.route("/predict", methods=['POST'])
-def predict(filename):
+def predict():
+    img = cv2.imdecode(np.fromstring(request.files['image'].read(),
+        np.uint8), cv2.IMREAD_COLOR)
     image = face_recognition.load_image_file(request.files['image'])
 
     face_locations = face_recognition.face_locations(image, model="cnn")
 
+    filename = str(time.time()*1000) + ".jpg"
+    cropped = False
+
     # Crop image to just the face if a face is detected
     if face_locations:
+        cropped = True
+
         face_location = list(face_locations[0])
 
         top, right, bottom, left = face_location
 
         face_image = image[top:bottom, left:right]
         image = Image.fromarray(face_image)
+        image.save(filename)
+        img = cv2.imread(filename)
+        print("cropped")
 
     if not loc.model:
         loc.model = load_model(model_path)
 
-    img = cv2.imdecode(np.fromstring(image.read(),
-        np.uint8), cv2.IMREAD_COLOR)
     img = cv2.resize(img, (img_width, img_height))
     img = np.reshape(img, [1, img_width, img_height, 3])
 
     prediction = loc.model.predict(img)
+
+    if cropped:
+        os.remove(filename)
 
     return classes[list(prediction[0]).index(1)]
 
