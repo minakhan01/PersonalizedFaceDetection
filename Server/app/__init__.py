@@ -4,6 +4,7 @@
 
 from flask import Flask, render_template, jsonify, redirect, request
 from flask.ext.mysql import MySQL
+from werkzeug.local import Local
 import os
 import numpy as np
 from keras.models import load_model
@@ -27,9 +28,11 @@ mysql.init_app(app)
 # dimensions of images
 img_width, img_height = 150, 150
 
+loc = Local()
+loc.model = None
+
 try:
     model_path = os.getcwd() + '/model.h5'
-    model = load_model(model_path)
 
     classes_path = os.getcwd() + '/classes.txt'
     classes = open(classes_path).read().splitlines()
@@ -55,12 +58,15 @@ def home():
 
 @app.route("/only_predict", methods=['POST'])
 def only_predict():
+    if not loc.model:
+        loc.model = load_model(model_path)
+
     img = cv2.imdecode(np.fromstring(request.files['image'].read(),
         np.uint8), cv2.IMREAD_COLOR)
     img = cv2.resize(img, (img_width, img_height))
     img = np.reshape(img, [1, img_width, img_height, 3])
 
-    prediction = model.predict(img)
+    prediction = loc.model.predict(img)
 
     return classes[list(prediction[0]).index(1)]
 
@@ -79,12 +85,15 @@ def predict(filename):
         face_image = image[top:bottom, left:right]
         image = Image.fromarray(face_image)
 
+    if not loc.model:
+        loc.model = load_model(model_path)
+
     img = cv2.imdecode(np.fromstring(image.read(),
         np.uint8), cv2.IMREAD_COLOR)
     img = cv2.resize(img, (img_width, img_height))
     img = np.reshape(img, [1, img_width, img_height, 3])
 
-    prediction = model.predict(img)
+    prediction = loc.model.predict(img)
 
     return classes[list(prediction[0]).index(1)]
 
