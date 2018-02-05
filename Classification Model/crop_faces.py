@@ -8,7 +8,7 @@ output_directories = ['cropped_face_data/train', 'cropped_face_data/validation']
 
 img_width = 155, img_height = 155
 
-for i, directory in enumerate(directories):
+for i, directory in enumerate(input_directories):
     for filename in os.listdir(directory):
         image = face_recognition.load_image_file(filename)
 
