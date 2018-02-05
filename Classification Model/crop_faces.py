@@ -3,8 +3,22 @@ import face_recognition
 import cv2
 from PIL import Image
 
-input_directories = ['face_data/train', 'face_data/validation']
-output_directories = ['cropped_face_data/train', 'cropped_face_data/validation']
+input_directories = ['face_data/train/Aishwarya Rai',
+                     'face_data/train/Barrack Obama',
+                     'face_data/train/Hillary Clinton',
+                     'face_data/train/Michael Jackson',
+                     'face_data/validation/Aishwarya Rai',
+                     'face_data/validation/Barrack Obama',
+                     'face_data/validation/Hillary Clinton',
+                     'face_data/validation/Michael Jackson',]
+output_directories = ['cropped_face_data/train/Aishwarya Rai',
+                      'cropped_face_data/train/Barrack Obama',
+                      'cropped_face_data/train/Hillary Clinton',
+                      'cropped_face_data/train/Michael Jackson',
+                      'cropped_face_data/validation/Aishwarya Rai',
+                      'cropped_face_data/validation/Barrack Obama',
+                      'cropped_face_data/validation/Hillary Clinton',
+                      'cropped_face_data/validation/Michael Jackson',]
 
 img_width = 155, img_height = 155
 
