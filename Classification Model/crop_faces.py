@@ -20,7 +20,8 @@ output_directories = ['cropped_face_data/train/Aishwarya Rai',
                       'cropped_face_data/validation/Hillary Clinton',
                       'cropped_face_data/validation/Michael Jackson',]
 
-img_width = 155, img_height = 155
+img_width = 155
+img_height = 155
 
 for i, directory in enumerate(input_directories):
     for filename in os.listdir(directory):
