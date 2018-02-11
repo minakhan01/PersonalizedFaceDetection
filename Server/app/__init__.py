@@ -58,8 +58,9 @@ def home():
     else:
         return "unknown"
 
-@app.route("/only_predict", methods=['POST'])
-def only_predict():
+@app.route("/old_predict", methods=['POST'])
+def old_predict():
+    start_time = time.time()
     if not loc.model:
         loc.model = load_model(model_path)
 
@@ -69,19 +70,22 @@ def only_predict():
     img = np.reshape(img, [1, img_width, img_height, 3])
 
     prediction = loc.model.predict(img)
+    print("Time: " + str(time.time() - start_time))
 
     return classes[list(prediction[0]).index(1)]
 
 @app.route("/predict", methods=['POST'])
 def predict():
-    img = cv2.imdecode(np.fromstring(request.files['image'].read(),
-        np.uint8), cv2.IMREAD_COLOR)
+    start_time = time.time()
+    #img = cv2.imdecode(np.fromstring(request.files['image'].read(),
+    #    np.uint8), cv2.IMREAD_COLOR)
     image = face_recognition.load_image_file(request.files['image'])
-
+    image = cv2.resize(image, (img_width, img_height))
+    print("before")
     face_locations = face_recognition.face_locations(image, model="cnn")
-
-    filename = str(time.time()*1000) + ".jpg"
-    cropped = False
+    print("after")
+    #filename = str(time.time()*1000) + ".jpg"
+    #cropped = False
 
     # Crop image to just the face if a face is detected
     if face_locations:
@@ -92,21 +96,22 @@ def predict():
         top, right, bottom, left = face_location
 
         face_image = image[top:bottom, left:right]
-        image = Image.fromarray(face_image)
-        image.save(filename)
-        img = cv2.imread(filename)
+        #image = Image.fromarray(face_image)
+        #image.save(filename)
+        #img = cv2.imread(filename)
         print("cropped")
 
     if not loc.model:
         loc.model = load_model(model_path)
 
-    img = cv2.resize(img, (img_width, img_height))
-    img = np.reshape(img, [1, img_width, img_height, 3])
+    image = cv2.resize(image, (img_width, img_height))
+    image = np.reshape(image, [1, img_width, img_height, 3])
+    print("predicting")
+    prediction = loc.model.predict(image)
 
-    prediction = loc.model.predict(img)
-
-    if cropped:
-        os.remove(filename)
+    #if cropped:
+    #    os.remove(filename)
+    print("Time: " + str(time.time() - start_time))
 
     return classes[list(prediction[0]).index(1)]
 
