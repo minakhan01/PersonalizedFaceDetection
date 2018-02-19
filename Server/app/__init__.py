@@ -41,7 +41,6 @@ def old_predict():
 
 @app.route("/predict", methods=['POST'])
 def predict():
-    print(request.files['image'])
     prediction = model.predict(request.files['image'])
     return prediction
 

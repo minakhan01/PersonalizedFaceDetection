@@ -1,0 +1,11 @@
+<form action="/train" method="POST" enctype=multipart/form-data onsubmit="disableButton()">
+    <input type="text" name="name" id="name" default="Name">
+    <input type="file" name="image[]" id="image" multiple="">
+    <button type="submit" class="btn btn-fp" name="Train" id="Train">Add person</button>
+</form>
+
+<script type="text/javascript">
+    function disableButton() {
+        document.getElementsByName('Train')[2].disabled = true;
+    }
+</script>
