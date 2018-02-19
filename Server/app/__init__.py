@@ -41,9 +41,22 @@ def old_predict():
 
 @app.route("/predict", methods=['POST'])
 def predict():
+    print(request.files['image'])
     prediction = model.predict(request.files['image'])
     return prediction
 
 @app.route("/upload", methods=['GET'])
 def upload():
     return render_template("upload.html")
+
+@app.route("/train", methods=['POST'])
+def train():
+    uploaded_files = request.files.getlist("image[]")
+    result = ""
+    for file in uploaded_files:
+        result += model.predict(file) + " "
+    return result
+
+@app.route("/upload_multiple", methods=['GET'])
+def upload_multiple():
+    return render_template("upload_multiple.html")
