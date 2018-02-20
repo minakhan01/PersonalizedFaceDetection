@@ -50,8 +50,9 @@ def upload():
 
 @app.route("/train", methods=['POST'])
 def train():
-    uploaded_files = request.files.getlist("image[]")
-    result = ""
+    train_files = request.files.getlist("train[]")
+    validation_files = request.files.getlist("validation[]")
+    result = request.form["name"] + " - "
     for file in uploaded_files:
         result += model.predict(file) + " "
     return result

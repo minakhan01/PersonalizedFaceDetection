@@ -1,6 +1,8 @@
 <form action="/train" method="POST" enctype=multipart/form-data onsubmit="disableButton()">
-    <input type="text" name="name" id="name" default="Name">
-    <input type="file" name="image[]" id="image" multiple="">
+    <label for="name">Person's name</label>
+    <input type="text" name="name" id="name">
+    <input type="file" name="train[]" id="train" multiple="">
+    <input type="file" name="validation[]" id="validation" multiple="">
     <button type="submit" class="btn btn-fp" name="Train" id="Train">Add person</button>
 </form>
 
