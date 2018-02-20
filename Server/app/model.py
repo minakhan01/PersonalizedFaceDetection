@@ -8,21 +8,18 @@ try:
 except:
     using_face_recognition = False
 import time
+from . import trainer
 
 # dimensions of images
 img_width, img_height = 150, 150
 
-try:
-    model_path = os.getcwd() + '/model.h5'
+model_path = os.getcwd() + '/model.h5'
 
-    classes_path = os.getcwd() + '/classes.txt'
-    classes = open(classes_path).read().splitlines()
-except:
-    model_path = os.getcwd() + '\Server\model.h5'
-    model = load_model(model_path)
+classes_path = os.getcwd() + '/classes.txt'
+classes = open(classes_path).read().splitlines()
 
-    classes_path = os.getcwd() + '\Server\classes.txt'
-    classes = open(classes_path).read().splitlines()
+train_data_dir = os.getcwd() + '/data/train'
+validation_data_dir = os.getcwd() + '/data/validation'
 
 def predict(file):
     start_time = time.time()
@@ -68,3 +65,23 @@ def old_predict(file):
     print("Time: " + str(time.time() - start_time))
 
     return classes[list(prediction[0]).index(1)]
+
+def add_class(name, train_images, validation_images):
+    train_dir = train_data_dir + "/" + name
+    validation_dir = validation_data_dir + "/" + name
+    try:
+        os.makedirs(train_dir)
+        os.makedirs(validation_dir)
+    except FileExistsError:
+        pass
+
+    for image in train_images:
+        image.save(os.path.join(train_dir, image.filename))
+
+    for image in validation_images:
+        image.save(os.path.join(validation_dir, image.filename))
+
+    trainer.train()
+
+    classes = open(classes_path).read().splitlines()
+    print(classes)

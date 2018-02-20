@@ -52,10 +52,8 @@ def upload():
 def train():
     train_files = request.files.getlist("train[]")
     validation_files = request.files.getlist("validation[]")
-    result = request.form["name"] + " - "
-    for file in uploaded_files:
-        result += model.predict(file) + " "
-    return result
+    model.add_class(request.form["name"], train_files, validation_files)
+    return redirect('/upload_multiple')
 
 @app.route("/upload_multiple", methods=['GET'])
 def upload_multiple():
